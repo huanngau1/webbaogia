@@ -1,0 +1,60 @@
+{% load static %}
+<div class="container mt-5">
+    <h2>Thông tin báo giá</h2>
+    <div class="row">
+        <div class="col-lg-6 mb-3">
+            <form>
+                <div class="mb-3">
+                    <label for="customerName1" class="form-label">Tên khách hàng</label>
+                    <input type="text" class="form-control" id="customerName1" placeholder="Enter customer name">
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="customerPhone1" class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" id="customerPhone1" placeholder="Enter phone number">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="customerEmail1" class="form-label">Email Khách hàng</label>
+                        <input type="email" class="form-control" id="customerEmail1" placeholder="Enter email">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="customerAddress1" class="form-label">Địa chỉ khách hàng</label>
+                    <input type="text" class="form-control" id="customerAddress1" placeholder="Enter address">
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-6 mb-3">
+            <form>
+                <div class="mb-3">
+                    <label for="representativeName" class="form-label">Đại diện kinh doanh</label>
+                    <input type="text" class="form-control" id="representativeName" placeholder="Enter customer name">
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="representativePhone" class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" id="representativePhone" placeholder="Enter phone number">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="representativeEmail" class="form-label">Email </label>
+                        <input type="email" class="form-control" id="representativeEmail" placeholder="Enter email">
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="quoteCode" class="form-label">Mã báo giá</label>
+                        <input type="text" class="form-control" id="quoteCode" placeholder="BGKST010124/12" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="laborFee" class="form-label">% phí nhân công lắp đặt</label>
+                        <input type="number" class="form-control" id="laborFee" placeholder="0-100%" required>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <a id="download" class="btn btn-success">Tải File Excel Báo Giá <i class="fa fa-image"></i></a>
+    </div>
+    <br><br>
+</div>

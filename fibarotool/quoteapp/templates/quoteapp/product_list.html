@@ -1,0 +1,324 @@
+{% load static %}
+{% load humanize %}
+{% load custom_filters %}
+<div class="container mt-5">
+    <h1>Chọn thiết bị thông minh cho ngôi nhà của bạn</h1>
+    <div class="col-md-12 mb-6 text-end total">
+        Chi phí dự tính:
+        <span id="total">0&nbsp;₫</span>
+    </div>
+    <br>
+    {% for classify in classifys %}
+    <div class="accordion" id="accordionExample-{{ classify.name }}">
+        {% for category in classify.categories.all %}
+        <div class="accordion-item">
+            <h2 class="accordion-header d-flex justify-content-between align-items-center" id="heading-{{ category.id }}">
+                <button class="accordion-button flex-grow-1" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse-{{ category.id }}" aria-expanded="true" aria-controls="collapse-{{ category.id }}">
+                    {{ category.name }}
+                </button>
+                <button class="btn ms-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop-{{ category.id }}"><i
+                        class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            </h2>
+            <div id="collapse-{{ category.id }}" class="accordion-collapse collapse show" aria-labelledby="heading-{{ category.id }}">
+                <div class="accordion-body">
+                    <table class="table table-bordered border-primary align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">Mã sản phẩm</th>
+                                <th scope="col">Hình ảnh</th>
+                                <th scope="col">Thông tin sản phẩm</th>
+                                <th scope="col">Thương hiệu</th>
+                                <th scope="col">Đơn vị</th>
+                                <th scope="col">Giá sản phẩm</th>
+                                <th scope="col">Số lượng</th>
+                                <th scope="col">Tổng giá</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Các sản phẩm sẽ được thêm vào đây -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop-{{ category.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel-{{ category.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel-{{ category.id }}">Chọn {{ category.name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-header">
+                        <div class="row w-100">
+                            <div class="col-md-6">
+                                <select id="originId-{{ category.id }}" name="originId" class="form-select" aria-label="Thương hiệu">
+                                    {% for brand in brands %}
+                                        <option value="{{ brand.id }}">{{ brand.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <select id="originId2-{{ category.id }}" name="originId" class="form-select" aria-label="Sắp xếp">
+                                        <option value="price_asc">giá: tăng dần</option>
+                                        <option value="price_desc">giá: thấp dần</option>
+                                        <option value="name_asc">mã: A-Z</option>
+                                        <option value="name_desc">mã: Z-A</option>
+                                    </select>
+                                    <button class="btn-search btn-search-furniture-item" data-category-id="{{ category.id }}"
+                                        data-row="{{ forloop.counter }}" aria-label="Tìm kiếm"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Mã sản phẩm</th>
+                                    <th scope="col">Hình ảnh</th>
+                                    <th scope="col">Thông tin sản phẩm</th>
+                                    <th scope="col">Giá sản phẩm</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in category.products.all %}
+                                    <tr>
+                                        <td>{{ product.name }}</td>
+                                        <td><img src="{{ product.image.url }}" width="50" height="50" /></td>
+                                        <td style="white-space: pre-wrap;">{{ product.description }}</td>
+                                        <td>{{ product.price| format_currency }}</td>
+                                        <td>
+                                            <button class="btn ms-3 add-product-btn" 
+                                                data-classify-id="{{ classify.name }}"
+                                                data-category-id="{{ category.id }}"
+                                                data-product-id="{{ product.id }}"
+                                                data-product-name="{{ product.name }}"
+                                                data-product-description="{{ product.description }}"
+                                                data-product-brand="{{ product.brand.name }}"
+                                                data-product-unit="{{ product.unit.name }}"
+                                                data-product-price="{{ product.price | format_currency}}"
+                                                data-product-image-url="{{ product.image.url }}">
+                                                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+
+    <br>
+    <div class="col-md-12 mb-6 text-end total">
+        Chi phí dự tính:
+        <span id="total2">0&nbsp;₫</span>
+    </div>
+    
+
+
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll('.product-total').forEach(totalCell => {
+                total += parseFloat(totalCell.textContent.replace(/,/g, '').replace(/₫/g, '')) || 0;
+            });
+            const formattedTotal = total.toLocaleString('en-US'); // Sử dụng 'en-US' để định dạng với dấu phẩy
+            document.getElementById('total').textContent = formattedTotal;
+            document.getElementById('total2').textContent = formattedTotal;
+        }
+    
+        function formatNumber(value) {
+            return value.toLocaleString('en-US'); // Sử dụng 'en-US' để định dạng với dấu phẩy
+        }
+    
+        document.querySelectorAll('.add-product-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.dataset.productId;
+                const productName = this.dataset.productName;
+                const productDescription = this.dataset.productDescription;
+                const productPrice = parseFloat(this.dataset.productPrice.replace(/,/g, '').replace(/₫/g, '')); // Chuyển đổi thành số
+                const productImageUrl = this.dataset.productImageUrl;
+                const productBrand = this.dataset.productBrand;
+                const productUnit = this.dataset.productUnit;
+    
+                const formattedPrice = formatNumber(productPrice); // Định dạng số cho hiển thị
+    
+                const newProductHtml = `
+                    <tr data-product-id="${productId}">
+                        <td>${productName}</td>
+                        <td><img src="${productImageUrl}" width="70" height="70" /></td>
+                        <td style="white-space: pre-wrap;">${productDescription}</td>
+                        <td>${productBrand}</td>
+                        <td>${productUnit}</td>
+                        <td>${formattedPrice}</td>
+                        <td><input type="text" class="form-control product-quantity" value="1" min="1"></td>
+                        <td class="product-total">${formattedPrice}</td>
+                        <td><button class="btn btn-danger remove-product-btn"><i class="fa fa-trash"></i></button></td>
+                    </tr>
+                `;
+    
+                const tableBody = document.querySelector(`#collapse-${this.dataset.categoryId} tbody`);
+                if (tableBody) {
+                    tableBody.insertAdjacentHTML('beforeend', newProductHtml);
+                    updateTotal();
+                }
+    
+                // Đóng modal sau khi thêm sản phẩm
+                const modal = document.querySelector(`#staticBackdrop-${this.dataset.categoryId}`);
+                if (modal) {
+                    const modalInstance = bootstrap.Modal.getInstance(modal);
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    }
+                }
+            });
+        });
+    
+        document.querySelector('.container').addEventListener('input', function(event) {
+            if (event.target.classList.contains('product-quantity')) {
+                const row = event.target.closest('tr');
+                const priceCell = row.querySelector('td:nth-child(6)');
+                const quantityInput = event.target;
+                const totalCell = row.querySelector('.product-total');
+    
+                if (priceCell && totalCell) {
+                    const price = parseFloat(priceCell.textContent.replace(/,/g, '').replace(/₫/g, '')) || 0;
+                    const quantity = parseInt(quantityInput.value, 10) || 1;
+                    const total = price * quantity;
+                    totalCell.textContent = formatNumber(total);
+                    updateTotal();
+                }
+            }
+        });
+    
+        document.querySelector('.container').addEventListener('click', function(event) {
+            if (event.target.closest('.remove-product-btn')) {
+                const row = event.target.closest('tr');
+                if (row) {
+                    row.remove();
+                    updateTotal();
+                }
+            }
+        });
+    
+        document.getElementById('download').addEventListener('click', function() {
+            const classifys = [];
+    
+            const customerInfo = {
+                customerName: document.getElementById('customerName1').value.trim(),
+                customerPhone: document.getElementById('customerPhone1').value.trim(),
+                customerEmail: document.getElementById('customerEmail1').value.trim(),
+                customerAddress: document.getElementById('customerAddress1').value.trim(),
+                representativeName: document.getElementById('representativeName').value.trim(),
+                representativePhone: document.getElementById('representativePhone').value.trim(),
+                representativeEmail: document.getElementById('representativeEmail').value.trim(),
+                quoteCode: document.getElementById('quoteCode').value.trim(),
+                laborFee: document.getElementById('laborFee').value.trim()
+            };
+    
+            document.querySelectorAll('.accordion-item').forEach(item => {
+                const classifyName = item.closest('.accordion').id.replace('accordionExample-', '');
+                const categoryName = item.querySelector('.accordion-button').textContent.trim();
+                const products = [];
+        
+                item.querySelectorAll('tbody tr').forEach(row => {
+                    const productId = row.dataset.productId;
+                    const productName = row.querySelector('td:nth-child(1)').textContent.trim();
+                    const productImageUrl = row.querySelector('td:nth-child(2) img').src.trim();  // Lấy đúng URL hình ảnh từ thẻ img
+                    const productDescription = row.querySelector('td:nth-child(3)').textContent.trim();
+                    const productBrand = row.querySelector('td:nth-child(4)').textContent.trim();
+                    const productUnit = row.querySelector('td:nth-child(5)').textContent.trim();
+                    const productPrice = parseFloat(row.querySelector('td:nth-child(6)').textContent.replace(/,/g, '').replace(/₫/g, '')) || 0; // Chuyển đổi thành số
+                    const productQuantity = parseInt(row.querySelector('.product-quantity').value, 10) || 1;
+                    const productTotal = parseFloat(row.querySelector('.product-total').textContent.replace(/,/g, '').replace(/₫/g, '')) || 0; // Chuyển đổi thành số
+        
+                    products.push({
+                        productId,
+                        productName,
+                        productImageUrl,  // Đảm bảo giá trị đúng được lưu vào đây
+                        productDescription,
+                        productBrand,
+                        productUnit,
+                        productPrice,
+                        productQuantity,
+                        productTotal
+                    });
+                });
+        
+                if (products.length > 0) {
+                    classifys.push({
+                        classify: classifyName,
+                        categories: [{
+                            category: categoryName,
+                            products: products
+                        }]
+                    });
+                }
+            });
+    
+            fetch('/download-excel/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({customerInfo, classifys })
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'bao_gia.xlsx';
+                a.click();
+                URL.revokeObjectURL(url);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+    
+    
+    
+</script>

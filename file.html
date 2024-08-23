@@ -1,0 +1,200 @@
+{% load static %}
+<h1>Chọn nội thất cho ngôi nhà của bạn</h1>
+<div class="row mb-3 align-items-center">
+    <div class="col-md-6 mb-3">
+        <a id="reset" class="btn btn-success">Làm Mới <i class="fa fa-undo"></i></a>
+    </div>
+    <div class="col-md-6 mb-3 text-end total">
+        Chi phí dự tính:
+        <span id="total">1.800.000&nbsp;₫</span>
+    </div>
+</div>
+<div class="container mt-5">
+    {% for category in categorys %}
+    <div class="accordion" id="accordionExample-{{ category.id }}">
+        <div class="accordion-item">
+            <h2 class="accordion-header d-flex justify-content-between align-items-center"
+                id="heading-{{ category.id }}">
+                <button class="accordion-button flex-grow-1" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse-{{ category.id }}" aria-expanded="true"
+                    aria-controls="collapse-{{ category.id }}">
+                    {{ category.name }}
+                </button>
+                <!-- Thêm nút vào tiêu đề Accordion -->
+                <button class="btn ms-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop-{{ category.id }}"><i
+                        class="fa fa-plus-circle" aria-hidden="true"></i></button>
+            </h2>
+            <div id="collapse-{{ category.id }}" class="accordion-collapse collapse show"
+                aria-labelledby="heading-{{ category.id }}">
+                <div class="accordion-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Mã sản phẩm</th>
+                                <th scope="col">Hình ảnh</th>
+                                <th scope="col">Thông tin sản phẩm</th>
+                                <th scope="col">Giá sản phẩm</th>
+                                <th scope="col">Số lượng</th>
+                                <th scope="col">Tổng tiền</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Sản phẩm được thêm vào đây -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop-{{ category.id }}" data-bs-backdrop="static" data-bs-keyboard="false"
+            tabindex="-1" aria-labelledby="staticBackdropLabel-{{ category.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel-{{ category.id }}">Chọn {{ category.name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-header">
+                        <div class="row w-100">
+                            <div class="col-md-6">
+                                <select id="originId-{{ category.id }}" name="originId" class="form-select"
+                                    aria-label="Thương hiệu">
+                                    <option value="1017">Fibaro</option>
+                                    <option value="1016">Homekit</option>
+                                    <option value="1015">Smart thing</option>
+                                    <option value="1014">Aquara</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <select id="originId2-{{ category.id }}" name="originId" class="form-select"
+                                        aria-label="Sắp xếp">
+                                        <option value="1017">giá: tăng dần</option>
+                                        <option value="1016">giá: thấp dần</option>
+                                        <option value="1015">mã: A-Z</option>
+                                        <option value="1014">mã: Z-A</option>
+                                    </select>
+                                    <button class="btn-search btn-search-furniture-item"
+                                        data-category-id="{{ category.id }}" data-row="{{ forloop.counter }}"
+                                        aria-label="Tìm kiếm"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Mã sản phẩm</th>
+                                    <th scope="col">Hình ảnh</th>
+                                    <th scope="col">Thông tin sản phẩm</th>
+                                    <th scope="col">Giá sản phẩm</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                {% if product.category.id == category.id %}
+                                <tr>
+                                    <td>{{ product.name }}</td>
+                                    <td><img src="{{ product.image.url }}" width="70" height="70" /></td>
+                                    <td>{{ product.description }}</td>
+                                    <td>{{ product.price }}</td>
+                                    <td>
+                                        <button class="btn ms-3 add-product-btn" data-category-id="{{ category.id }}"
+                                            data-product-id="{{ product.id }}" data-product-name="{{ product.name }}"
+                                            data-product-description="{{ product.description }}"
+                                            data-product-price="{{ product.price }}"
+                                            data-product-image-url="{{ product.image.url }}">
+                                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<br><br>
+<div class="row mb-3 align-items-center">
+    <div class="col-md-6 mb-3">
+        <a id="download" class="btn btn-success">Tải File Excel Báo Giá <i class="fa fa-image"></i></a>
+    </div>
+    <div class="col-md-6 mb-3 text-end total">
+        Chi phí dự tính:
+        <span id="total2">1.800.000&nbsp;₫</span>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Lấy tất cả các nút "Chọn sản phẩm"
+        const addProductButtons = document.querySelectorAll('.add-product-btn');
+
+        addProductButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                // Lấy thông tin sản phẩm từ các thuộc tính dữ liệu của nút
+                const categoryId = this.dataset.categoryId;
+                const productId = this.dataset.productId;
+                const productName = this.dataset.productName;
+                const productDescription = this.dataset.productDescription;
+                const productPrice = parseFloat(this.dataset.productPrice);
+                const productImageUrl = this.dataset.productImageUrl;
+
+                // Tạo HTML cho sản phẩm mới
+                const newProductHtml = `
+                    <tr data-product-id="${productId}">
+                        <td>${productName}</td>
+                        <td><img src="${productImageUrl}" width="70" height="70" /></td>
+                        <td>${productDescription}</td>
+                        <td>${productPrice.toFixed(2)}</td>
+                        <td><input type="number" class="form-control product-quantity" value="1" min="1"></td>
+                        <td class="product-total">${productPrice.toFixed(2)}</td>
+                        <td><button class="btn ms-3 remove-product-btn"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>
+                    </tr>
+                `;
+
+                // Tìm accordion-body của category tương ứng và thêm sản phẩm mới vào
+                const accordionBody = document.querySelector(`#accordionExample-${categoryId} .accordion-body table tbody`);
+                accordionBody.insertAdjacentHTML('beforeend', newProductHtml);
+
+                // Đóng modal
+                const modal = document.getElementById(`staticBackdrop-${categoryId}`);
+                const modalInstance = bootstrap.Modal.getInstance(modal);
+                modalInstance.hide();
+
+                // Gán sự kiện cho input số lượng và nút xóa sau khi thêm sản phẩm
+                const newProductRow = accordionBody.querySelector(`tr[data-product-id="${productId}"]`);
+                const quantityInput = newProductRow.querySelector('.product-quantity');
+                const totalCell = newProductRow.querySelector('.product-total');
+
+                quantityInput.addEventListener('input', function () {
+                    const quantity = parseInt(this.value);
+                    totalCell.textContent = (quantity * productPrice).toFixed(2);
+                });
+
+                newProductRow.querySelector('.remove-product-btn').addEventListener('click', function () {
+                    newProductRow.remove();
+                });
+            });
+        });
+    });
+</script>
